@@ -3,15 +3,17 @@ import random
 class Character:
 
     stats = {'str': 10,'dex': 10,'con': 10,'int': 10,'wis': 10,'cha': 10}
-    mods ={1: -5, 2: -4, 3: -4, 4: -3, 5: -3, 6: -2, 7: -2, 8: -1, 9: -1, 10: 0, 11: 0, 12: 1, 13: 1, 14: 2, 15: 2, 16:
+    mods = {1: -5, 2: -4, 3: -4, 4: -3, 5: -3, 6: -2, 7: -2, 8: -1, 9: -1, 10: 0, 11: 0, 12: 1, 13: 1, 14: 2, 15: 2, 16:
         3, 17: 3, 18: 4, 19: 4, 20: 5, 21: 5, 22: 6, 23: 6, 24: 7, 25: 7, 26: 8, 27: 8, 28: 9, 29: 9, 39: 10}
+
+    racial_traits = {}
 
     level = 1
     features = {}
     proficiency = 2
-    race=""
-    cla =""
-    name=""
+    race = ""
+    cla = ""
+    name = ""
     pass
 
     #create a Character object with specified race put
@@ -32,26 +34,38 @@ class Character:
 
 
         #loop to end when all stats are assigned
-        while assigned < 6:
+        stats =[]
+        for x in list_of_stats:
+            stats.append(self.random_stat())
 
-        #print stats left to be assigned
-            print ("You have still not assigned: ")
-            for stat in list_of_stats:
-                print (stat)
+        print("you have rolled {} \n".format(stats))
+        for stat in stats:
+            good = 0
+            while good == 0:
+                print("{}\n".format(stat))
+                chosen = str(input("Which stat would you like to assign this score?\n "))
+                if chosen == "str":
+                    self.stats[chosen] = stat
+                    good +=1
+                elif chosen == "dex":
+                    self.stats[chosen] = stat
+                    good += 1
+                elif chosen == "con":
+                    self.stats[chosen] = stat
+                    good += 1
+                elif chosen == "int":
+                    self.stats[chosen] = stat
+                    good += 1
+                elif chosen == "wis":
+                    self.stats[chosen] = stat
+                    good += 1
+                elif chosen == "cha":
+                    self.stats[chosen] = stat
+                    good += 1
+                else:
+                    print("\nPlease enter a valid stat name: str, con, dex, int, wis, cha \n")
 
-            stat = self.random_stat()
-
-            chosen = str(input("Which stat would you like to assign this score?\n "))
-
-            self.stats[chosen]=stat
-            #show stat
-            print("Your {} stat is {}".format(chosen, self.stats[chosen]))
-
-            list_of_stats.remove(chosen)
-            #increment counter
-            assigned+=1
-
-        print("Your total stat distributions is")
+        print("Your total stat distributions is\n")
 
         self.show_stats()
 
@@ -91,16 +105,34 @@ class Character:
     def add_racial(self):
         #adds racial bonuses to stats
 
-
-        if(self.race=='human'):
+        if self.race == 'human':
             for stat in self.stats:
-                self.stats[stat]+=1
-        elif (self.race=='elf'):
-            self.stats['dex']+=2
-            self.stats['int']+=1
-        elif(self.race=='dwarf'):
-            self.stats['con']+=2
-            self.stats['wis']+=1
+                self.stats[stat] += 1
+        elif self.race == 'elf':
+            self.stats['dex'] += 2
+        elif self.race == 'dwarf':
+            self.stats['con'] += 2
+        elif self.race == 'gnome':
+            self.stats['int'] += 2
+        elif self.race == 'halfling':
+            self.stats['dex'] += 2
+        elif self.race == 'half-orc':
+            self.stats['str'] += 2
+            self.stats['con'] += 1
+        elif self.race == 'tiefling':
+            self.stats['cha'] += 2
+            self.stats['int'] += 1
+        elif self.race == 'dwarf':
+            self.stats['con'] += 2
+        elif self.race == 'dragonborn':
+            self.stats['str'] += 2
+            self.stat['cha'] += 1
+        elif self.race == 'half-elf':
+            self.stats['cha'] += 2
+            chosen = input("Choose the first stat for your half-elf racial +1 bonus")
+            self.stats[chosen] += 1
+            chosen = input("Choose the second stat for your half-elf racial +1 bonus")
+            self.stats[chosen] += 1
         else:
             raise()
 
@@ -153,7 +185,8 @@ class Character:
     def class_features(self):
         lvl = 1
         while lvl <= self.level:
-            print (lvl, self.features[lvl])
+            print(lvl, self.features[lvl])
+            print("\n")
             lvl += 1
         pass
 
@@ -171,14 +204,12 @@ class Character:
 
         prof = (bool(input("Are you profiient in this attack? Please answer True or False")))
 
-        atk= 0
-
         if prof:
-            atk=roll+self.proficiency+self.mods[self.stats[stat]]
+            atk = roll+self.proficiency+self.mods[self.stats[stat]]
         else:
-            atk=roll+self.stats[stat]
+            atk = roll+self.stats[stat]
 
-        print ("your attack is {}".format(atk))
+        print("your attack is {}".format(atk))
         pass
 
 class Fighter(Character):
@@ -469,7 +500,7 @@ def load_character():
 
 
 #creator start
-load = input("Would you like to load a previous character yes or no?")
+load = input("Would you like to load a previous character? yes or no?")
 
 if load == 'no':
 
@@ -485,12 +516,24 @@ if load == 'no':
     while valid_R == 0:
 
         #c heck valid race name
-        race = input(str("What race is your character, human ,elf, or dwarf?"))
+        race = input(str("What race is your character, human ,elf, dwarf?, dragonborn, gnome, half-elf, halfling, half-orc, or tiefling"))
         if race == "human":
             valid_R += 1
         elif race == "elf":
             valid_R += 1
         elif race == "dwarf":
+            valid_R += 1
+        elif race == "dragonborn":
+            valid_R += 1
+        elif race == "gnome":
+            valid_R += 1
+        elif race == "half-elf":
+            valid_R += 1
+        elif race == "halfling":
+            valid_R += 1
+        elif race == "half-orc":
+            valid_R += 1
+        elif race == "tiefling":
             valid_R += 1
         elif race == "other":
             valid_R += 1
