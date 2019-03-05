@@ -110,7 +110,7 @@ class Character:
         stat = input("Which stat?")
         amount = input("by how much?")
 
-        self.stats[stat] += amount
+        self.stats[stat] += int(amount)
 
         pass
 
@@ -214,8 +214,8 @@ class Wizard(Character):
 def save_character(new_character):
 
     with open("{}.txt".format(new_character.name), "w+") as doc:
-        print("Writing character to {}.txt".format(name))
-        doc.write("{}\n".format(name))
+        print("Writing character to {}.txt".format(new_character.name))
+        doc.write("{}\n".format(new_character.name))
         doc.write("{}\n".format(str(new_character.level)))
         doc.write("{}\n".format(new_character.race))
         doc.write("{}\n".format(new_character.cla))
@@ -223,18 +223,18 @@ def save_character(new_character):
         doc.write("{}\n".format(str(new_character.stats)))
 
         curr = 1
-        while curr <= int(lvl):
+        while curr <= int(new_character.level):
             doc.write("{}-".format(str(curr)))
             doc.write("{}\n".format(str(new_character.features[curr])))
             curr += 1
 
 
 def load_character():
-    new_character = Character
+
     name = input(("Please enter character name\n"))
 
     with open("{}.txt".format(name)) as doc:
-        name = doc.readline()
+        doc.readline()
         level = int(doc.readline())
         race = doc.readline()
         cla = doc.readline()
@@ -248,10 +248,18 @@ def load_character():
         cleaned_stats = cleaned_stats.replace(",", ":")
         cleaned_stats = cleaned_stats.replace("'", "")
         cleaned_stats = cleaned_stats.replace(" ", "")
-        cleaned_stats = cleaned_stats.replace("\n", "")
         list_of_stats = cleaned_stats.split(":")
 
         #remove stat names
+
+        # string fix testing!!!
+        race.strip()
+        race.replace('\n', '')
+
+        print("..." +name + "...")
+        print("..." +race + "...")
+        print("..."+cla+"...")
+
 
         i = 0
         while i < 6:
@@ -266,7 +274,7 @@ def load_character():
 
         if cla == 'Fighter\n':
             new_character = Fighter(race)
-        elif cla == 'Wizard':
+        elif cla == 'Wizard\n':
             new_character = Wizard(race)
         else:
             raise()
@@ -294,7 +302,7 @@ if load == 'no':
     cls = input(str("What class is your character, fighter or wizard?"))
     lvl = input(str("What level is your character?"))
 
-    if cls=='wizard':
+    if cls == 'wizard':
         if race == 'elf':
             new_character = Wizard('elf')
         else:
@@ -329,6 +337,7 @@ while run == 0:
                    "press 5 to save your character\n"
                    "press 6 to load a previous character\n"
                    "press 7 to level up your character \n"
+                    "8 to print your characters name, class, and race\n"
                    "press anything else to exit\n"))
 
 
@@ -348,6 +357,10 @@ while run == 0:
         new_character = load_character()
     elif choice == '7':
         new_character.level_up()
+    elif choice == '8':
+        print("..."+new_character.name+"...")
+        print("..."+new_character.race+"...")
+        print("..." + new_character.cla + "...")
     else:
         run = 1
 
