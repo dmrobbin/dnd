@@ -16,15 +16,18 @@ class Character:
     race = ""
     cla = ""
     name = ""
+    resource = {}
+    re_name = ""
 
-    #create a Character object with specified race put
-    #put racial bonuses in constructor
+    # create a Character object with specified race
+    # put racial bonuses in constructor
     def __init__(self, race):
         self.race = race
         self.roll_stats()
         self.add_racial(race)
 
         pass
+
 
     def edit_notes(self):
         choice = input("Would you like to add a new note, edit an old note, or delete an old note? |add, edit, delete\n")
@@ -44,7 +47,7 @@ class Character:
 
             self.notes[int(note_index)] = input("please write your new note. |Enter when you are finished.\n")
 
-        elif choice =='delete':
+        elif choice == 'delete':
             for i in range(len(self.notes)):
 
                 print(i, " {}".format(self.notes[i]))
@@ -250,6 +253,11 @@ class Character:
         print("your attack is {}".format(atk))
         pass
 
+    def class_resources(self):
+        print("You are a level {} {}. Your class resource is {} you have {} at this level.".format(self.level, self.cla,self.re_name, self.resource[self.level]))
+    pass
+
+
 class Barbarian(Character):
     features = {1: 'Rage, Unarmored Defense', 2: 'Reckless attack ,danger sense', 3: 'Primal path',
                 4: 'Ability score improvement', 5: 'Extra attack, fast movement', 6: 'path feature',
@@ -259,14 +267,15 @@ class Barbarian(Character):
                 17: "Brutal critical (3 dice)", 18: "Indomitable might", 19: "Ability score improvement",
                 20: "Primal champion"}
 
+    resource = {1: 2,2: 2, 3: 3, 4: 3, 5: 3, 6: 4, 7: 4, 8: 4, 9: 4, 10: 4, 11: 4, 12: 5, 13: 5, 14: 5, 15: 5, 16: 5,
+                17: 6, 18: 6, 19: 6, 20: 'Unlimited'}
+
     def __init__(self, race):
         self.race = race
         self.cla = "Barbarian"
+        self.re_name = "Rage"
 
         unarmored_defense = 10 + self.mods[self.stats['dex']] + self.mods[self.stats['con']]
-
-    pass
-
 
 class Bard(Character):
     features = {1: 'Spellcasting, bardic inspiration (d6)', 2: 'Jack of all trades, Song of rest (d6)',
@@ -304,9 +313,23 @@ class Bard(Character):
                    17: 20, 18: 22, 19: 22, 20: 22
                    }
 
+
     def __init__(self, race):
         self.race = race
         self.cla = "Bard"
+        self.re_name = "Bardic Inspiration"
+
+        self.resource = {1: (self.stat['cha'], "d6"), 2: (self.stat['cha'], "d6"), 3: (self.stat['cha'], "d6"),
+                         4: (self.stat['cha'], "d6"), 5: (self.stat['cha'], "d8"), 6: (self.stat['cha'], "d8"),
+                         7: (self.stat['cha'], "d8"), 8: (self.stat['cha'], "d8"), 9: (self.stat['cha'], "d8"),
+                         10: (self.stat['cha'], "d10"), 11: (self.stat['cha'], "d10"), 12: (self.stat['cha'], "d10"),
+                         13: (self.stat['cha'], "d10"), 14: (self.stat['cha'], "d10"), 15: (self.stat['cha'], "d12"),
+                         16: (self.stat['cha'], "d12"), 17: (self.stat['cha'], "d12"), 18: (self.stat['cha'], "d12"),
+                         19: (self.stat['cha'], "d12"), 20: (self.stat['cha'], "d12")}
+
+
+
+    def caster_info(self):
 
         if self.level > 9:
             cantrips_known = 4
@@ -315,12 +338,17 @@ class Bard(Character):
         else:
             cantrips_known = 2
 
-        spell_save = self.proficiency + 8 + self.mods[self.stats['cha']]
+        print("You are a level {} Bard.\n".format(self.level))
+        print("These are your spell slots:\n{}".format(self.spell_slots[self.level]))
+        print("You should know {} spells.\n".format(self.spell_known[level]))
+        print("Your spell save dc is: {}".format(self.proficiency + 8 + self.mods[self.stats['cha']]))
+        print("You should know {} cantrips\n".format(cantrips_known))
 
-    pass
+    # bardic inspiration
 
 
 class Cleric(Character):
+
     features = {1: 'Spellcasting, Divine domain', 2: 'channel divinity 1/rest, Divine domain', 3: '-',
                 4: 'Ablity score improvement', 5: 'Destory undead (CR 1/2)',
                 6: 'Channel Divinity (2/rest), Divine Domain features', 7: "-",
@@ -352,9 +380,15 @@ class Cleric(Character):
                    20: {1: 4, 2: 3, 3: 3, 4: 3, 5: 3, 6: 2, 7: 2, 8: 1, 9: 1}
                    }
 
+    resource = {1: 0, 2: 1, 3: 1, 4: 1, 5: 1, 6: 2, 7: 2, 8: 2, 9: 2, 10: 2, 11: 2, 12: 2, 13: 2, 14: 2, 15: 2, 16: 2,
+                17: 2, 18: 3, 19: 3, 20: 3}
+
     def __init__(self, race):
         self.race = race
         self.cla = "Cleric"
+        self.re_name = "Channel Divinity"
+
+    def caster_info(self):
 
         if self.level > 9:
             cantrips_known = 5
@@ -363,12 +397,16 @@ class Cleric(Character):
         else:
             cantrips_known = 3
 
-        spell_save = self.proficiency + 8 + self.mods[self.stats['wis']]
+        print("You are a level {} Cleric.\n".format(self.level))
+        print("These are your spell slots:\n{}".format(self.spell_slots[self.level]))
+        print("Your spell save dc is: {}".format(self.proficiency + 8 + self.mods[self.stats['wis']]))
+        print("You should know {} cantrips\n".format(cantrips_known))
 
-    pass
+    # channel divinity
 
 
 class Druid(Character):
+
     features = {1: 'Druidic, Spellcasting', 2: 'Wild Shape, Druid circle', 3: '-',
                 4: 'Wild shape improvement, Ability score improvement', 5: '-', 6: 'Druid Circle feature', 7: "-",
                 8: "Wild Shape improvement, ability score improvement", 9: "-", 10: "Druid Circle feature", 11: "-",
@@ -398,10 +436,22 @@ class Druid(Character):
                    20: {1: 4, 2: 3, 3: 3, 4: 3, 5: 3, 6: 2, 7: 2, 8: 1, 9: 1}
                    }
 
+    resource = {1: '0', 2: '1/4', 3: '1/4', 4: '1/2', 5: '1/2', 6: '1/2', 7: '1/2', 8: '1', 9: '1', 10: '1', 11: '1',
+                12: '1', 13: '1', 14: '1', 15: '1', 16: '1', 17: '1', 18: '1', 19: '1', 20: '1'}
 
     def __init__(self, race):
         self.race = race
         self.cla = "Druid"
+        self.re_name = "Wild Shape Max CR"
+
+    pass
+
+    def class_resources(self):
+        print("You are a level {} {}. Your max wild shape CR for non druids is {} at this level."
+              .format(self.level, self.cla, self.resource[self.level]))
+    pass
+
+    def caster_info(self):
 
         if self.level > 9:
             cantrips_known = 4
@@ -410,8 +460,12 @@ class Druid(Character):
         else:
             cantrips_known = 2
 
-    pass
+        print("You are a level {} Druid.\n".format(self.level))
+        print("These are your spell slots:\n{}".format(self.spell_slots[self.level]))
+        print("Your spell save dc is: {}".format(self.proficiency + 8 + self.mods[self.stats['WIS']]))
+        print("You should know {} cantrips\n".format(cantrips_known))
 
+    # wild shapes
 
 class Fighter(Character):
 
@@ -423,6 +477,9 @@ class Fighter(Character):
                 16: "Ability score improvement", 17: "Action surge (two uses), Indomitable (three uses",
                 18: "Martial archetype feature", 19: "ablity score improvement", 20: "Extra attack (three uses"}
 
+    def class_resources(self):
+        print("As a fighter you do not have a native class resource.")
+    pass
 
     def __init__(self, race):
 
@@ -433,6 +490,7 @@ class Fighter(Character):
 
         pass
 
+    # superiority die???
 
 class Monk(Character):
     features = {1: 'unarmored defense, Martial arts', 2: 'Ki, unarmored movement',
@@ -444,16 +502,24 @@ class Monk(Character):
                 16: "ability score improvement", 17: "monastic tradition feature", 18: "empty body",
                 19: "Ability score improvement", 20: "perfect self"}
 
+
+
     def __init__(self, race):
         self.race = race
         self.cla = "Monk"
+        self.re_name = "Ki"
+        for i in range(20):
+            self.resource.append(i+1)
+
+        self.resource[0] = 0
 
         unarmored_defense = 10 + self.mods[self.stats['dex']] + self.mods[self.stats['wis']]
 
-    pass
+    # ki
 
 
 class Paladin(Character):
+
     features = {1: 'Divine sense, lay on hands', 2: 'Fighting style, spellcasting, divine smite',
                 3: 'Divine health, sacred oath', 4: 'ability score improvement', 5: 'extra attack',
                 6: 'Auro of protection', 7: "sacred oath feature", 8: "ability score improvement", 9: "-",
@@ -487,13 +553,22 @@ class Paladin(Character):
     def __init__(self, race):
         self.race = race
         self.cla = "Paladin"
+        self.re_name = "Lay on hands"
 
-        spell_save = self.proficiency + 8 + self.mods[self.stats['cha']]
+        for i in range(20):
+            self.resource[i] = (i+1)*5
 
-    pass
 
+    def caster_info(self):
+
+        print("You are a level {} Paladin.\n".format(self.level))
+        print("These are your spell slots:\n{}".format(self.spell_slots[self.level]))
+        print("Your spell save dc is: {}".format(self.proficiency + 8 + self.mods[self.stats['cha']]))
+
+    # lay on hands
 
 class Ranger(Character):
+
     features = {1: 'Facored enemy, natural explorere', 2: 'fighting style, spellcasting',
                 3: 'primeval awareness, ranger conclave', 4: 'ability score improvement', 5: 'ranger conclave feature',
                 6: 'greater favored enemy', 7: "ranger conclave feature",
@@ -533,7 +608,16 @@ class Ranger(Character):
         self.race = race
         self.cla = "Ranger"
 
+    def class_resources(self):
+        print("As a Ranger you do not have a native class resource.")
     pass
+
+    def caster_info(self):
+
+        print("You are a level {} Ranger.\n".format(self.level))
+        print("These are your spell slots:\n{}".format(self.spell_slots[self.level]))
+        print("You should know {} spells.\n".format(self.spell_known[level]))
+        print("Your spell save dc is: {}".format(self.proficiency + 8 + self.mods[self.stats['WIS']]))
 
 
 class Rogue(Character):
@@ -545,15 +629,18 @@ class Rogue(Character):
                 14: "Blindsense", 15: "Slippery mind", 16: "Ability score improvement",
                 17: "Rougish archetype feature", 18: "Elusive", 19: "Ability score improvement", 20: "Stroke of luck"}
 
+    resource = {1: '1d6', 2: '1d6', 3: '2d6', 4: '2d6', 5: '3d6', 6: '3d6', 7: '4d6', 8: '4d6', 9: '5d6', 10: '5d6',
+                11: '6d6', 12: '6d6', 13: '7d6', 14: '7d6', 15: '8d6', 16: '8d6', 17: '9d6', 18: '9d6', 19: '10d6', 20: '10d6'}
+
     def __init__(self, race):
         self.race = race
         self.cla = "Rogue"
+        self.re_name = "Sneak attack die"
 
-    pass
-
-
+    # sneak attack
 
 class Sorcerer(Character):
+
     features = {1: 'spellcasting, sorcerous origin', 2: 'font of magic', 3: 'metamagic', 4: 'ability score improvent',
                 5: '-', 6: 'sorcerous origin feature', 7: "-", 8: "ability score improvement", 9: "-", 10: "metamagic",
                 11: "-", 12: "ability score improvement", 13: "-", 14: "sorcerous origin feature", 15: "-",
@@ -590,8 +677,17 @@ class Sorcerer(Character):
 
 
     def __init__(self, race):
+
         self.race = race
         self.cla = "Sorcerer"
+        self.re_name = "Sorcery points"
+
+        for i in range(20):
+            self.resource[i] = (i+1)
+
+        self.resource[0] = 0
+
+    def caster_info(self):
 
         if self.level > 9:
             cantrips_known = 6
@@ -600,10 +696,13 @@ class Sorcerer(Character):
         else:
             cantrips_known = 4
 
-        spell_save = self.proficiency + 8 + self.mods[self.stats['cha']]
+        print("You are a level {} Sorcerer.\n".format(self.level))
+        print("These are your spell slots:\n{}".format(self.spell_slots[self.level]))
+        print("You should know {} spells.\n".format(self.spell_known[level]))
+        print("Your spell save dc is: {}".format(self.proficiency + 8 + self.mods[self.stats['cha']]))
+        print("You should know {} cantrips\n".format(cantrips_known))
 
-    pass
-
+    # sorcery points
 
 class Warlock(Character):
     features = {1: 'Otherworldly Patron, pact magic', 2: 'Eldritch invocations', 3: 'pact boon',
@@ -636,6 +735,11 @@ class Warlock(Character):
                    20: {1: 0, 2: 0, 3: 0, 4: 0, 5: 4, 6: 0, 7: 0, 8: 0, 9: 0}
                    }
 
+    spell_known = {1: 2, 2: 3, 3: 4, 4: 5, 5: 6, 6: 7, 7: 8, 8: 9, 9: 10,
+                   10: 10, 11: 11, 12: 11, 13: 12, 14: 12, 15: 13, 16: 13,
+                   17: 14, 18: 14, 19: 15, 20: 15
+                   }
+
     invocations_known = {1: 0, 2: 2, 3: 2, 4: 2, 5: 3, 6: 3, 7: 4, 8: 4, 9: 5, 10: 5,
                          11: 5, 12: 6, 13: 6, 14: 7, 15: 7, 16: 7, 17: 8, 18: 8, 19: 8,
                          20: 8}
@@ -644,6 +748,12 @@ class Warlock(Character):
         self.race = race
         self.cla = "Warlock"
 
+    def class_resources(self):
+        print("As a Warlock you do not have a native class resource.")
+    pass
+
+    def caster_info(self):
+
         if self.level > 9:
             cantrips_known = 4
         elif self.level > 3:
@@ -651,9 +761,13 @@ class Warlock(Character):
         else:
             cantrips_known = 2
 
-        spell_save = self.proficiency + 8 + self.mods[self.stats['cha']]
+        print("You are a level {} Warlock.\n".format(self.level))
+        print("These are your spell slots:\n{}".format(self.spell_slots[self.level]))
+        print("You should know {} spells.\n".format(self.spell_known[self.level]))
+        print("Your spell save dc is: {}".format(self.proficiency + 8 + self.mods[self.stats['cha']]))
+        print("You should know {} cantrips\n".format(cantrips_known))
+        print("You should know {} Eldritch invocations.\n".format(self.invocations_known[self.level]))
 
-    pass
 
 
 class Wizard(Character):
@@ -687,10 +801,16 @@ class Wizard(Character):
                    20: {1: 4, 2: 3, 3: 3, 4: 3, 5: 3, 6: 2, 7: 2, 8: 1, 9: 1}
                    }
 
-
     def __init__(self, race):
+
         self.race = race
         self.cla = "Wizard"
+
+    def class_resources(self):
+        print("As a Wizard you do not have a native class resource.")
+    pass
+
+    def caster_info(self):
 
         if self.level > 9:
             cantrips_known = 5
@@ -699,7 +819,9 @@ class Wizard(Character):
         else:
             cantrips_known = 3
 
-        spell_save = self.proficiency + 8 + self.mods[self.stats['int']]
+        print("You are a level {} Wizard.\n".format(self.level))
+        print("These are your spell slots:\n{}".format(self.spell_slots[self.level]))
+        print("Your spell save dc is: {}".format(self.proficiency + 8 + self.mods[self.stats['int']]))
+        print("You should know {} cantrips\n".format(cantrips_known))
 
-    pass
 

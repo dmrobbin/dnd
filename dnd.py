@@ -95,7 +95,7 @@ def load_character():
                 new_character = Fighter(race)
             elif cla == 'Wizard':
                 new_character = Wizard(race)
-            elif cla=='Rogue':
+            elif cla == 'Rogue':
                 new_character = Rogue(race)
             elif cla == "Barbarian":
                 new_character = Barbarian(race)
@@ -226,7 +226,7 @@ if load == 'no':
     while valid_C == 0:
 
         cls = input(str("What class is your character?\n"
-                        "Barbarian, Bard, Cleric, Druid, Figther, Monk,"
+                        "Barbarian, Bard, Cleric, Druid, Fighter, Monk,"
                         "Paladin, Ranger, Rogue, Sorcerer, Warlock, Wizard\n"))
 
         # check valid class name
@@ -300,6 +300,8 @@ while run == 0:
                     "press 8 to level down your character\n"
                     "press 9 to edit your notes\n"
                     "press 10 to view your notes\n"
+                    "press 11 to view your spell casting info\n"
+                    "press 12 to view your class resource\n"
                     "press anything else to exit\n"))
 
     if choice == '1':
@@ -324,6 +326,13 @@ while run == 0:
     elif choice == '10':
         for i in range(len(new_character.notes)):
             print(i, "{} \n".format(new_character.notes[i]))
+    elif choice == '11':
+        if new_character.cla == 'Bard' or new_character.cla == 'Cleric' or new_character.cla == 'Druid' or new_character.cla == 'Paladin' or new_character.cla == 'Ranger' or new_character.cla == 'Sorcerer' or new_character.cla == 'Warlock' or new_character.cla == 'Wizard':
+                new_character.caster_info()
+        else:
+                print("You are not a spell casting class.")
+    elif choice == '12':
+        new_character.class_resources()
     else:
         confirm = input("Are you sure that you want to quit? Type yes if you would like to quit.\n")
         if confirm == 'yes':
