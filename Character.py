@@ -2,7 +2,7 @@ import random
 
 class Character:
 
-    stats = {'str': 10,'dex': 10,'con': 10,'int': 10,'wis': 10,'cha': 10}
+    stats = {'str': 10, 'dex': 10, 'con': 10, 'int': 10, 'wis': 10, 'cha': 10}
     mods = {1: -5, 2: -4, 3: -4, 4: -3, 5: -3, 6: -2, 7: -2, 8: -1, 9: -1, 10: 0, 11: 0, 12: 1, 13: 1, 14: 2, 15: 2, 16:
             3, 17: 3, 18: 4, 19: 4, 20: 5, 21: 5, 22: 6, 23: 6, 24: 7, 25: 7, 26: 8, 27: 8, 28: 9, 29: 9, 39: 10}
 
@@ -76,6 +76,7 @@ class Character:
         for x in range(6):
             stats.append(self.random_stat())
 
+        stats.sort(reverse = True)
         print("you have rolled {} \n".format(stats))
         for stat in stats:
             good = 0
@@ -319,13 +320,13 @@ class Bard(Character):
         self.cla = "Bard"
         self.re_name = "Bardic Inspiration"
 
-        self.resource = {1: (self.stat['cha'], "d6"), 2: (self.stat['cha'], "d6"), 3: (self.stat['cha'], "d6"),
-                         4: (self.stat['cha'], "d6"), 5: (self.stat['cha'], "d8"), 6: (self.stat['cha'], "d8"),
-                         7: (self.stat['cha'], "d8"), 8: (self.stat['cha'], "d8"), 9: (self.stat['cha'], "d8"),
-                         10: (self.stat['cha'], "d10"), 11: (self.stat['cha'], "d10"), 12: (self.stat['cha'], "d10"),
-                         13: (self.stat['cha'], "d10"), 14: (self.stat['cha'], "d10"), 15: (self.stat['cha'], "d12"),
-                         16: (self.stat['cha'], "d12"), 17: (self.stat['cha'], "d12"), 18: (self.stat['cha'], "d12"),
-                         19: (self.stat['cha'], "d12"), 20: (self.stat['cha'], "d12")}
+        self.resource = {1: (self.stats['cha'], "d6"), 2: (self.stats['cha'], "d6"), 3: (self.stats['cha'], "d6"),
+                         4: (self.stats['cha'], "d6"), 5: (self.stats['cha'], "d8"), 6: (self.stats['cha'], "d8"),
+                         7: (self.stats['cha'], "d8"), 8: (self.stats['cha'], "d8"), 9: (self.stats['cha'], "d8"),
+                         10: (self.stats['cha'], "d10"), 11: (self.stats['cha'], "d10"), 12: (self.stats['cha'], "d10"),
+                         13: (self.stats['cha'], "d10"), 14: (self.stats['cha'], "d10"), 15: (self.stats['cha'], "d12"),
+                         16: (self.stats['cha'], "d12"), 17: (self.stats['cha'], "d12"), 18: (self.stats['cha'], "d12"),
+                         19: (self.stats['cha'], "d12"), 20: (self.stats['cha'], "d12")}
 
 
 
@@ -509,7 +510,7 @@ class Monk(Character):
         self.cla = "Monk"
         self.re_name = "Ki"
         for i in range(20):
-            self.resource.append(i+1)
+            self.resource[i]= i+1
 
         self.resource[0] = 0
 

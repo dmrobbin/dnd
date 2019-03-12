@@ -1,6 +1,7 @@
 import random
 import json
 import time
+from server_interation import *
 from Character import *
 
 
@@ -175,12 +176,7 @@ def load_character():
             print("\nLoaded successfully! \n")
             return new_character
 
-
-
-load = input("Would you like to load a previous character? yes or no?\n")
-
-if load == 'no':
-
+def create_new():
     # Build new character
 
     name = input(str("What is the name of your character?\n"))
@@ -194,7 +190,7 @@ if load == 'no':
     valid_R = 0
     while valid_R == 0:
 
-        #check valid race name
+        # check valid race name
 
         race = input(str("What race is your character? human ,elf, dwarf, "
                          "dragonborn, gnome, half-elf, halfling, half-orc, or tiefling\n"))
@@ -238,7 +234,7 @@ if load == 'no':
             new_character = Wizard(race)
             valid_C += 1
         elif cls == "rogue":
-            new_character= Rogue(race)
+            new_character = Rogue(race)
             valid_C += 1
         elif cls == "barbarian":
             new_character = Barbarian(race)
@@ -274,15 +270,23 @@ if load == 'no':
     new_character.roll_stats()
     new_character.add_racial()
 
-    curr = 0
-
-    for x in range(int(lvl)-1):
+    for x in range(int(lvl) - 1):
         new_character.level_up()
 
+    return new_character
+
+load = input("Would you like to load a previous character? yes or no?\n")
+
+if load == 'no':
+    new_character = create_new()
 # Load character from txt
 
 else:
-    new_character = load_character()
+    dec = input("Importing from local?\n")
+    if dec == 'yes':
+        new_character = load_character()
+    else:
+        new_character = import_character()
 
 run = 0
 
@@ -294,14 +298,15 @@ while run == 0:
                     "press 2 to view your characters stats\n"
                     "press 3 to view your characters features\n"
                     "press 4 to change adjust your characters stats\n"
-                    "press 5 to save your character as\n"
-                    "press 6 to load a previous character from\n"
+                    "press 5 to save your character\n"
+                    "press 6 to load a previous character\n"
                     "press 7 to level up your character \n"
                     "press 8 to level down your character\n"
                     "press 9 to edit your notes\n"
                     "press 10 to view your notes\n"
                     "press 11 to view your spell casting info\n"
                     "press 12 to view your class resource\n"
+                    "press 13 to make a new character \n\n"
                     "press anything else to exit\n"))
 
     if choice == '1':
@@ -314,9 +319,19 @@ while run == 0:
     elif choice == '4':
         new_character.adjust_stats()
     elif choice == '5':
-        save_character(new_character)
+        dec = input("Save to local?\n")
+        if dec == 'yes':
+            save_character(new_character)
+        else:
+            final = input("are you SURE? Saving will overwrite any character with the same name\n")
+            if final == 'yes':
+                add_record(new_character)
     elif choice == '6':
-        new_character = load_character()
+        dec = input("Importing from local?\n")
+        if dec =='yes':
+            new_character = load_character()
+        else:
+            new_character = import_character()
     elif choice == '7':
         new_character.level_up()
     elif choice == '8':
@@ -333,6 +348,10 @@ while run == 0:
                 print("You are not a spell casting class.")
     elif choice == '12':
         new_character.class_resources()
+    elif choice == '13':
+        dec = input("Are you sure? Any changes to the current character will be lost.")
+        if dec == 'yes':
+            new_character = create_new()
     else:
         confirm = input("Are you sure that you want to quit? Type yes if you would like to quit.\n")
         if confirm == 'yes':
